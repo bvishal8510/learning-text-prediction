@@ -44,15 +44,18 @@ n_patterns = len(dataX)
 #10 - 90064
 #5 - 90069
 
-# reshape X to be [samples, time steps, features]
+# reshape X to be [samples, time steps, features] reshape(array, shape, order)
 X = numpy.reshape(dataX, (n_patterns, seq_length, 1))
 # print(X)
+
 # normalize
 X = X / float(n_vocab)
-# print(X)
-# one hot encode the output variable
+
+# one hot encode the output variable #converts array into multiple arrays with corresponding value as 1 rest as 0
 y = to_categorical(dataY)
 # print(y)
+# print(y.shape)
+
 
 # define the LSTM model
 model = Sequential()
@@ -68,8 +71,8 @@ filepath="weights-improvement-{epoch:02d}-{loss:.4f}.hdf5"
 checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
 callbacks_list = [checkpoint]
 
-#needed to train the model only run once else regret
-# model.fit(X, y, epochs=50, batch_size=64, callbacks=callbacks_list) 
+# # to train the model only run once else regret
+# model.fit(X, y, epochs=50, batch_size=64, callbacks=callbacks_list)
 
 # load the network weights
 # filename = "weights-improvement-38-1.2788.hdf5"
@@ -79,12 +82,19 @@ model.compile(loss='categorical_crossentropy', optimizer='adam')
 
 int_to_char = dict((i, c) for i, c in enumerate(chars))
 
-# pick a random seed
-start = numpy.random.randint(0, len(dataX)-1)
-print("start",start)
-pattern = dataX[start]
-print ("Seed   :=", end='')
-print(''.join([int_to_char[value] for value in pattern]))
+# # pick a random seed
+# # start = numpy.random.randint(0, len(dataX)-1)
+# # start = 86136
+# # print("start",start)
+# pattern = dataX[start]
+# print("pattern",pattern)
+# print ("Seed   :=", end='')
+# # print(''.join([int_to_char[value] for value in pattern]))
+# print([int_to_char[value] for value in pattern])
+
+starting_char = input("Enter starting characters :")
+pattern = [char_to_int[char] for char in starting_char]
+print("pattern",pattern)
 print("1")
 # generate characters
 for i in range(100):
