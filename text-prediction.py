@@ -95,9 +95,9 @@ int_to_char = dict((i, c) for i, c in enumerate(chars))
 starting_char = input("Enter starting characters :")
 pattern = [char_to_int[char] for char in starting_char]
 print("pattern",pattern)
-print("1")
+
 # generate characters
-for i in range(100):
+for i in range(2):
 	x = numpy.reshape(pattern, (1, len(pattern), 1))
 	x = x / float(n_vocab)
 	prediction = model.predict(x, verbose=0)
@@ -107,7 +107,4 @@ for i in range(100):
 	sys.stdout.write(result)
 	pattern.append(index)
 	pattern = pattern[1:len(pattern)]
-	print()
-	if(i==2):
-		break
 
