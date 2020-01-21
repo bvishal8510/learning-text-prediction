@@ -8,12 +8,15 @@ from tensorflow.python.keras.callbacks import ModelCheckpoint
 from tensorflow.python.keras.utils import to_categorical
 import tensorflow as tf
 import utils
+import codecs
+
 
 # load ascii text and covert to lowercase
 filename = "wonderland.txt"
-raw_text = open(filename).read()
+raw_text = codecs.open(filename, encoding = "utf8", errors ='replace').read()
 raw_text = raw_text.lower()
 # print(raw_text)
+# types_of_encoding = ["utf8", "cp1252"]
 
 # # create mapping of unique chars to integers
 words = utils.preprocess(raw_text) #=raw_text
@@ -79,11 +82,11 @@ checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only
 callbacks_list = [checkpoint]
 
 # # # to train the model only run once else regret
-# model.fit(X, y, epochs=50, batch_size=64, callbacks=callbacks_list)
+# model.fit(X, y, epochs=100, batch_size=64, callbacks=callbacks_list)
 
 # load the network weights
 # filename = "weights-improvement-38-1.2788.hdf5"
-filename = "weights-improvement-50-2.9777.hdf5"
+filename = "weights-improvement-100-3.5546.hdf5"
 model.load_weights(filename)
 model.compile(loss='categorical_crossentropy', optimizer='adam')
 
@@ -100,10 +103,10 @@ model.compile(loss='categorical_crossentropy', optimizer='adam')
 starting_words = input("Enter starting 5 words:").lower().split()
 print(starting_words)
 pattern = [word_to_int[word] for word in starting_words]
-print("pattern",pattern)
+# print("pattern",pattern)
 
 # generate characters
-for i in range(1):
+for i in range(20):
 	x = numpy.reshape(pattern, (1, len(pattern), 1))
 	x = x / float(n_vocab)
 	prediction = model.predict(x, verbose=0)
@@ -111,6 +114,7 @@ for i in range(1):
 	result = int_to_word[index]
 	seq_in = [int_to_word[value] for value in pattern]
 	sys.stdout.write(result)
+	# print(result)
 	pattern.append(index)
 	pattern = pattern[1:len(pattern)]
 
