@@ -23,14 +23,16 @@ def preprocess(raw_text):
                 raw_text = raw_text.replace(i, '.')
         elif((not i.isalnum()) and i!=' ' ):
             raw_text = raw_text.replace(i, '')
+
     sentences = raw_text.split('.')
+    raw_text = raw_text.replace('.',' ')
     words = raw_text.split()
 
-    # # Remove all words with  5 or fewer occurences
-    word_counts = Counter(words)
-    trimmed_words = [word for word in words if word_counts[word] > 5]
+    # Remove all words with  5 or fewer occurences
+    # word_counts = Counter(words)
+    # trimmed_words = [word for word in words if word_counts[word] > 5]
 
-    return trimmed_words, sentences
+    return words, sentences
 
 def create_lookup_tables(words):
     """
