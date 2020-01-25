@@ -17,12 +17,13 @@ raw_text = raw_text.lower()
 # print(raw_text)
 # types_of_encoding = ["utf8", "cp1252"]
 
-# # create mapping of unique chars to integers
-words = utils.preprocess(raw_text) #=raw_text
-unique_words = sorted(list(set(words)))  #=chars
+# create mapping of unique chars to integers
+words, sentences = utils.preprocess(raw_text)
+
+unique_words = sorted(list(set(words)))
 
 # print(words)
-word_to_int, int_to_word = utils.create_lookup_tables(words)
+word_to_int, int_to_word = utils.create_lookup_tables(unique_words)
 # print(words_to_int)
 # print(int_to_words)
 

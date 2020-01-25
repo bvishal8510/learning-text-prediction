@@ -28,6 +28,11 @@ word_to_int, int_to_word = utils.create_lookup_tables(unique_words)
 # print(words_to_int)
 # print(int_to_words)
 
+#writing extra data to file
+processed_data_file = open('processed-data.txt','w')
+
+
+
 n_vocab = len(unique_words)   
 # print ("Total Vocab: ", n_vocab)
 
