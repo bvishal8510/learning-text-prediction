@@ -26,9 +26,6 @@ processed_data_file.close()
 
 n_patterns = len(dataX)
 # print ("Total Patterns: ", n_patterns)  
-# #50 - 90024
-# #10 - 90064
-# #5 - 90069
 
 # reshape X to be [samples, time steps, features] reshape(array, shape, order)
 X = numpy.reshape(dataX, (n_patterns, seq_length, 1))
@@ -45,12 +42,12 @@ y = to_categorical(dataY)
 # print(y.shape)
 
 model = Sequential()
-model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2]), return_sequences=True))
+model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2]), return_sequences=True))       #check the significance of input_shape try with X.shape[0], X.shape[1]
 model.add(Dropout(0.2))
 model.add(LSTM(256))
 model.add(Dropout(0.2))
-model.add(Dense(y.shape[1], activation='softmax'))
-model.compile(loss='categorical_crossentropy', optimizer='adam')
+model.add(Dense(y.shape[1], activation='softmax'))      #try using linear or ReLU   
+model.compile(loss='categorical_crossentropy', optimizer='adam')   #mean squared error
 
 # load the network weights
 # filename = "weights-improvement-38-1.2788.hdf5"
@@ -61,13 +58,14 @@ model.compile(loss='categorical_crossentropy', optimizer='adam')
 
 print("Enter starting ",seq_length," words:")
 starting_words = input().lower().split()
-print(starting_words)
+# print(starting_words)
 pattern = [word_to_int[word] for word in starting_words]
 # print("pattern",pattern)
 
 # generate characters
-for i in range(5):
+for i in range(1):
 	x = numpy.reshape(pattern, (1, len(pattern), 1))
+	print(x)
 	x = x / float(n_vocab)
 	prediction = model.predict(x, verbose=0)
 	index = numpy.argmax(prediction)

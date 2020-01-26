@@ -17,7 +17,6 @@ filename = "wonderland.txt"
 raw_text = codecs.open(filename, encoding = "utf8", errors ='replace').read()
 raw_text = raw_text.lower()
 # print(raw_text)
-# types_of_encoding = ["utf8", "cp1252"]
 
 # create mapping of unique chars to integers
 words, sentences = utils.preprocess(raw_text)
@@ -30,7 +29,7 @@ word_to_int, int_to_word = utils.create_lookup_tables(unique_words)
 # print(int_to_words)
 
 
-n_vocab = len(unique_words)   
+n_vocab = len(unique_words)
 # print ("Total Vocab: ", n_vocab)
 
 # prepare the dataset of input to output pairs encoded as integers
@@ -50,24 +49,21 @@ for sentence in sentences:
 
 n_patterns = len(dataX)
 # print ("Total Patterns: ", n_patterns)  
-# #50 - 90024
-# #10 - 90064
-# #5 - 90069
 
 # reshape X to be [samples, time steps, features] reshape(array, shape, order)
 X = numpy.reshape(dataX, (n_patterns, seq_length, 1))
-# print(X)
 
-# normalize
+# normalize          #check here dividing by len(sentences)
 X = X / float(n_vocab)
 # print(X)
+
 # one hot encode the output variable #converts array into multiple arrays with corresponding value as 1 rest as 0
 y = to_categorical(dataY)
 # print(y)
 # print(X.shape)
 # print(y.shape)
 
-# #writing extra data to file
+# #writing processed data to file
 processed_data_file = open('processed-data','wb')
 
 pickle.dump(word_to_int, processed_data_file)
@@ -81,7 +77,7 @@ processed_data_file.close()
 
 # define the LSTM model
 model = Sequential()
-model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2]), return_sequences=True))
+model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2]), return_sequences=True))       #check the significance of input_shape try with X.shape[0], X.shape[1]
 model.add(Dropout(0.2))
 model.add(LSTM(256))
 model.add(Dropout(0.2))
@@ -94,4 +90,4 @@ checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only
 callbacks_list = [checkpoint]
 
 # to train the model only run once else regret
-# model.fit(X, y, epochs=300, batch_size=128, callbacks=callbacks_list)
+# model.fit(X, y, epochs=150, batch_size=128, callbacks=callbacks_list)
