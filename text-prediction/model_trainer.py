@@ -9,6 +9,7 @@ from tensorflow.python.keras.utils import to_categorical
 import tensorflow as tf
 import utils
 import codecs
+import pickle
 
 
 # load ascii text and covert to lowercase
@@ -27,10 +28,6 @@ unique_words = sorted(list(set(words)))
 word_to_int, int_to_word = utils.create_lookup_tables(unique_words)
 # print(words_to_int)
 # print(int_to_words)
-
-#writing extra data to file
-processed_data_file = open('processed-data.txt','w')
-
 
 
 n_vocab = len(unique_words)   
@@ -72,6 +69,25 @@ y = to_categorical(dataY)
 # print(X.shape)
 # print(y.shape)
 
+# #writing extra data to file
+# processed_data_file = open('processed-data','wb')
+
+# pickle.dump(word_to_int, processed_data_file)
+# pickle.dump(int_to_word, processed_data_file)
+# pickle.dump(seq_length, processed_data_file)
+# pickle.dump(X, processed_data_file)
+# pickle.dump(y, processed_data_file)
+# # processed_data_file.write(str())
+# # processed_data_file.write("\n")
+# # processed_data_file.write(str())
+# # processed_data_file.write("\n")
+# # processed_data_file.write(str())
+# # processed_data_file.write("\n")
+# # processed_data_file.write(str())
+# # processed_data_file.write("\n")
+# # processed_data_file.write(str())
+# # processed_data_file.write("\n")
+# processed_data_file.close()
 
 # define the LSTM model
 model = Sequential()
@@ -88,39 +104,6 @@ checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only
 callbacks_list = [checkpoint]
 
 # to train the model only run once else regret
-model.fit(X, y, epochs=300, batch_size=128, callbacks=callbacks_list)
+# model.fit(X, y, epochs=300, batch_size=128, callbacks=callbacks_list)
 
-# # load the network weights
-# # filename = "weights-improvement-38-1.2788.hdf5"
-# filename = "weights-improvement-100-3.5546.hdf5"
-# model.load_weights(filename)
-# model.compile(loss='categorical_crossentropy', optimizer='adam')
-
-# # # pick a random seed
-# # # start = numpy.random.randint(0, len(dataX)-1)
-# # # start = 86136
-# # # print("start",start)
-# # pattern = dataX[start]
-# # print("pattern",pattern)
-# # print ("Seed   :=", end='')
-# # # print(''.join([int_to_char[value] for value in pattern]))
-# # print([int_to_char[value] for value in pattern])
-
-# starting_words = input("Enter starting 5 words:").lower().split()
-# print(starting_words)
-# pattern = [word_to_int[word] for word in starting_words]
-# # print("pattern",pattern)
-
-# # generate characters
-# for i in range(30):
-# 	x = numpy.reshape(pattern, (1, len(pattern), 1))
-# 	x = x / float(n_vocab)
-# 	prediction = model.predict(x, verbose=0)
-# 	index = numpy.argmax(prediction)
-# 	result = int_to_word[index]
-# 	sys.stdout.write(result)
-# 	sys.stdout.write(' ')
-# 	# print(result)
-# 	pattern.append(index)
-# 	pattern = pattern[1:len(pattern)]
 
