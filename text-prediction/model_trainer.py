@@ -39,14 +39,12 @@ dataX = []
 dataY = []
 
 for sentence in sentences:
-	# print(sentence)
 	sentence_words = sentence.split()
 	if(len(sentence_words)>seq_length):
 		for i in range(0, len(sentence_words) - seq_length):
 			seq_in = sentence_words[i:i + seq_length]
 			seq_out = sentence_words[i + seq_length]
 			dataX.append([word_to_int[word] for word in seq_in])
-			# print(seq_out)
 			dataY.append(word_to_int[seq_out])
 
 
@@ -70,24 +68,16 @@ y = to_categorical(dataY)
 # print(y.shape)
 
 # #writing extra data to file
-# processed_data_file = open('processed-data','wb')
+processed_data_file = open('processed-data','wb')
 
-# pickle.dump(word_to_int, processed_data_file)
-# pickle.dump(int_to_word, processed_data_file)
-# pickle.dump(seq_length, processed_data_file)
-# pickle.dump(X, processed_data_file)
-# pickle.dump(y, processed_data_file)
-# # processed_data_file.write(str())
-# # processed_data_file.write("\n")
-# # processed_data_file.write(str())
-# # processed_data_file.write("\n")
-# # processed_data_file.write(str())
-# # processed_data_file.write("\n")
-# # processed_data_file.write(str())
-# # processed_data_file.write("\n")
-# # processed_data_file.write(str())
-# # processed_data_file.write("\n")
-# processed_data_file.close()
+pickle.dump(word_to_int, processed_data_file)
+pickle.dump(int_to_word, processed_data_file)
+pickle.dump(seq_length, processed_data_file)
+pickle.dump(n_vocab, processed_data_file)
+pickle.dump(len(sentences), processed_data_file)
+pickle.dump(dataX, processed_data_file)
+pickle.dump(dataY, processed_data_file)
+processed_data_file.close()
 
 # define the LSTM model
 model = Sequential()
@@ -105,5 +95,3 @@ callbacks_list = [checkpoint]
 
 # to train the model only run once else regret
 # model.fit(X, y, epochs=300, batch_size=128, callbacks=callbacks_list)
-
-
