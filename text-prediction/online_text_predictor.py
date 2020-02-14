@@ -12,11 +12,12 @@ from keras.preprocessing.sequence import pad_sequences
 
 import string
 import numpy
+import codecs
 
 # load doc into memory
 def load_doc(filename):
 	# open the file as read only
-	file = open(filename, 'r')
+	file = codecs.open(filename, 'r', encoding = "utf8", errors ='replace')
 	# read all text
 	text = file.read()
 	# close the file
@@ -41,7 +42,7 @@ def clean_doc(doc):
 	return tokens
 
 # load document
-in_filename = 'new_sample_text.txt'
+in_filename = 'alchemist.txt'
 doc = load_doc(in_filename)
 # print(doc[:200])
 
@@ -108,13 +109,13 @@ model.add(Dense(vocab_size, activation='softmax'))
 # # compile model
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 # fit model
-model.fit(X, y, batch_size=128, epochs=10)
+# model.fit(X, y, batch_size=128, epochs=100)
 
 
 # save the model to file
-model.save('model.h5')
+# model.save('model.h5')
 # save the tokenizer
-dump(tokenizer, open('tokenizer.pkl', 'wb'))
+# dump(tokenizer, open('tokenizer.pkl', 'wb'))
 
 # generate a sequence from a language model
 def generate_seq(model, tokenizer, seq_length, seed_text, n_words):
@@ -153,8 +154,9 @@ tokenizer = load(open('tokenizer.pkl', 'rb'))
 
 # select a seed text
 seed_text = lines[randint(0,len(lines))]
-print(seed_text + '\n')
-
+print(seed_text)
+print(len(seed_text))
+print("here1")
 # generate new text
 generated = generate_seq(model, tokenizer, seq_length, seed_text, 10)
-print(generated)
+print("this :",generated)
