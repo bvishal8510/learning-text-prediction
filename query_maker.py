@@ -79,7 +79,7 @@ def word_predict(words):
 	# print()
 	# print("Inside script :", result)
 	# print()
-	# sys.stdout.write(result)
+	sys.stdout.write(result)
 	return result
 
 
