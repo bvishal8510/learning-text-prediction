@@ -1,3 +1,5 @@
+from flask import request, url_for
+from flask_api import FlaskAPI, status, exceptions
 import numpy
 import sys
 from tensorflow.python.keras.models import Sequential
@@ -12,6 +14,10 @@ import codecs
 import pickle
 
 
+app = FlaskAPI(__name__)
+
+
+@app.route('/<string:words>/', methods=['GET'])
 def word_predict(words):
 	#reading preprocessed data
 	processed_data_file = open('processed-data','rb')
@@ -79,10 +85,13 @@ def word_predict(words):
 	# print()
 	# print("Inside script :", result)
 	# print()
-	sys.stdout.write(result)
-	return result
+	# sys.stdout.write(result)
+	return {"word":result}
 
 
-words = sys.argv
-# print(words)
-word_predict(sys.argv[1])
+# words = sys.argv
+# # print(words)
+# word_predict(sys.argv[1])
+
+if __name__ == "__main__":
+    app.run(debug=True)

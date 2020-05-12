@@ -1,1 +1,1 @@
-worker: python query_maker.py
+web: gunicorn wsgi:app
