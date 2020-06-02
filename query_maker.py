@@ -24,40 +24,43 @@ def word_predict(words):
 
 	word_to_int = pickle.load(processed_data_file)
 	int_to_word = pickle.load(processed_data_file)
+	# print(int_to_word)
 	seq_length = pickle.load(processed_data_file)
 	n_vocab = pickle.load(processed_data_file)
-	len_sentences = pickle.load(processed_data_file)
-	dataX = pickle.load(processed_data_file)
-	dataY = pickle.load(processed_data_file)
+	# len_sentences = pickle.load(processed_data_file)
+	# dataX = pickle.load(processed_data_file)
 	processed_data_file.close()
 
-	if(len(words.lower().split()) != seq_length):
+	if((len(words.lower().split()) != seq_length) and (len(words.lower().split()) != seq_length+1)):
 		return ''
 
-	n_patterns = len(dataX)
-	# print ("Total Patterns: ", n_patterns)  
+	# n_patterns = len(dataX)
+	# # print ("Total Patterns: ", n_patterns)
 
-	# reshape X to be [samples, time steps, features] reshape(array, shape, order)
-	X = numpy.reshape(dataX, (n_patterns, seq_length, 1))
-	# print(X)
+	# # reshape X to be [samples, time steps, features] reshape(array, shape, order)
+	# X = numpy.reshape(dataX, (n_patterns, seq_length, 1))
 
-	# normalize            #check here dividing by len(sentences)
-	X = X / float(n_vocab)
-	# print(X)
+	# # print(X.shape)
+	# # print(X)
 
-	# one hot encode the output variable #converts array into multiple arrays with corresponding value as 1 rest as 0
-	# y = to_categorical(dataY)
-	# print(y)
-	# print(X.shape)
-	# print(y.shape)
+	# # normalize            #check here dividing by len(sentences)
+	# X = X / float(n_vocab)
+	# # print(X)
+	# # print(len(dataY))
+	# # one hot encode the output variable #converts array into multiple arrays with corresponding value as 1 rest as 0
+	# # y = to_categorical(dataY)
+	# # print(y)
+	# # print(X.shape)
+	# # print(y.shape)
 
 	model = Sequential()
-	model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2]), return_sequences=True))       #check the significance of input_shape try with X.shape[0], X.shape[1]
+	# model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2]), return_sequences=True))       #check the significance of input_shape try with X.shape[0], X.shape[1]
+	model.add(LSTM(256, input_shape=(seq_length, 1), return_sequences=True))       #check the significance of input_shape try with X.shape[0], X.shape[1]
 	model.add(Dropout(0.2))
 	model.add(LSTM(256))
 	model.add(Dropout(0.2))
 	# model.add(Dense(y.shape[1], activation='softmax'))      #try using linear or ReLU   
-	model.add(Dense(13015, activation='softmax'))
+	model.add(Dense(n_vocab, activation='softmax'))
 	model.compile(loss='categorical_crossentropy', optimizer='adam')   #mean squared error
 
 	# load the network weights

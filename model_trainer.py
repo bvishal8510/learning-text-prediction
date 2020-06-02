@@ -60,7 +60,9 @@ X = X / float(n_vocab)
 # one hot encode the output variable #converts array into multiple arrays with corresponding value as 1 rest as 0
 y = to_categorical(dataY)
 # print(y)
-# print(X.shape)
+
+# # print(y)
+# # print(X.shape)
 # print(y.shape)
 
 # #writing processed data to file
@@ -70,19 +72,16 @@ pickle.dump(word_to_int, processed_data_file)
 pickle.dump(int_to_word, processed_data_file)
 pickle.dump(seq_length, processed_data_file)
 pickle.dump(n_vocab, processed_data_file)
-pickle.dump(len(sentences), processed_data_file)
-pickle.dump(dataX, processed_data_file)
-pickle.dump(dataY, processed_data_file)
 processed_data_file.close()
 
 # define the LSTM model
 model = Sequential()
-model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2]), return_sequences=True))       #check the significance of input_shape try with X.shape[0], X.shape[1]
+model.add(LSTM(256, input_shape=(seq_length, 1), return_sequences=True))       #check the significance of input_shape try with X.shape[0], X.shape[1]
 model.add(Dropout(0.2))
 model.add(LSTM(256))
 model.add(Dropout(0.2))
 # model.add(Dense(y.shape[1], activation='softmax'))
-model.add(Dense(256, activation='softmax'))
+model.add(Dense(n_vocab, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam')
 
 # define the checkpoint
