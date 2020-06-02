@@ -20,38 +20,18 @@ app = FlaskAPI(__name__)
 @app.route('/<string:words>/', methods=['GET'])
 def word_predict(words):
 	#reading preprocessed data
+	input_words = words.lower().split()
+
 	processed_data_file = open('processed-data','rb')
 
 	word_to_int = pickle.load(processed_data_file)
 	int_to_word = pickle.load(processed_data_file)
-	# print(int_to_word)
 	seq_length = pickle.load(processed_data_file)
 	n_vocab = pickle.load(processed_data_file)
-	# len_sentences = pickle.load(processed_data_file)
-	# dataX = pickle.load(processed_data_file)
 	processed_data_file.close()
 
-	if((len(words.lower().split()) != seq_length) and (len(words.lower().split()) != seq_length+1)):
+	if((len(input_words) != seq_length) and (len(input_words) != seq_length+1)):
 		return ''
-
-	# n_patterns = len(dataX)
-	# # print ("Total Patterns: ", n_patterns)
-
-	# # reshape X to be [samples, time steps, features] reshape(array, shape, order)
-	# X = numpy.reshape(dataX, (n_patterns, seq_length, 1))
-
-	# # print(X.shape)
-	# # print(X)
-
-	# # normalize            #check here dividing by len(sentences)
-	# X = X / float(n_vocab)
-	# # print(X)
-	# # print(len(dataY))
-	# # one hot encode the output variable #converts array into multiple arrays with corresponding value as 1 rest as 0
-	# # y = to_categorical(dataY)
-	# # print(y)
-	# # print(X.shape)
-	# # print(y.shape)
 
 	model = Sequential()
 	# model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2]), return_sequences=True))       #check the significance of input_shape try with X.shape[0], X.shape[1]
@@ -69,11 +49,15 @@ def word_predict(words):
 	model.load_weights(filename)
 	model.compile(loss='categorical_crossentropy', optimizer='adam')
 
-
-	# print("Enter starting ",seq_length," words:")
-	starting_words = words.lower().split()
-	# print(starting_words)
-	pattern = [word_to_int[word] for word in starting_words]
+		
+	if(len(input_words)==seq_length+1):
+		X = numpy.reshape([word_to_int[word] for word in input_words[0:seq_length]], (1, seq_length, 1))
+		X = X / float(n_vocab)
+		y = to_categorical([word_to_int[input_words[seq_length]]], num_classes=n_vocab)
+		model.fit(X, y, epochs=3, batch_size=128)
+		pattern = [word_to_int[word] for word in input_words[1:]]
+	else:
+		pattern = [word_to_int[word] for word in input_words]
 	# print("pattern",pattern)
 
 	# generate characters
@@ -85,16 +69,7 @@ def word_predict(words):
 		result = int_to_word[index]
 		pattern.append(index)
 		pattern = pattern[1:len(pattern)]
-	# print()
-	# print("Inside script :", result)
-	# print()
-	# sys.stdout.write(result)
 	return {"word":result}
-
-
-# words = sys.argv
-# # print(words)
-# word_predict(sys.argv[1])
 
 if __name__ == "__main__":
     app.run(debug=True)
